@@ -206,19 +206,25 @@ function handleTouchStart(event) {
     event.preventDefault(); // Prevent default touch actions like scrolling
 
     const rect = canvas.getBoundingClientRect();
-    const touchX = event.touches[0].clientX - rect.left;
-    const touchY = event.touches[0].clientY - rect.top;
+    // Handle multi-touch by iterating through changedTouches or touches
+    // For simplicity, this example uses the first touch point.
+    const touch = event.touches[0];
+    const touchX = touch.clientX - rect.left;
+    const touchY = touch.clientY - rect.top;
 
-    // Horizontal movement
+    // Horizontal movement (Left/Right Halves)
     if (touchX < canvas.width / 2) {
         keys.left = true;
-        keys.right = false;
+        keys.right = false; // Ensure no conflicting horizontal input
     } else {
         keys.right = true;
-        keys.left = false;
+        keys.left = false; // Ensure no conflicting horizontal input
     }
 
     // Vertical movement
+    keys.up = false; // Reset vertical keys at the start of handling
+    keys.down = false;
+
     if (touchY < canvas.height / 2) { // Top half for up/jump
         if (!player.isJumping && player.onGround) {
             player.velocityY = player.jumpStrength;
@@ -228,16 +234,17 @@ function handleTouchStart(event) {
             player.ignorePlatformCollisionUntil = 0;
         }
         keys.up = true;
-        keys.down = false; 
-    } else { // Bottom half for down
+    } else if (touchY > canvas.height * 0.8) { // Bottom 20% of the screen for down
         keys.down = true;
-        keys.up = false;
     }
+    // If touchY is between canvas.height / 2 and canvas.height * 0.8,
+    // keys.up and keys.down remain false, effectively creating a vertical dead zone.
 }
 
 function handleTouchEnd(event) {
     if (victoryAchieved) return;
-    // When any touch ends, reset all directional keys controlled by touch
+    // When any touch ends, reset all directional keys.
+    // This is a simple approach; more complex multi-touch might require tracking individual touch IDs.
     keys.left = false;
     keys.right = false;
     keys.up = false;
