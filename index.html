@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treehouse Dream Odyssey - Sprites</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* Palette derived from typical treehouse/forest JRPG scenes */
+            background-color: #3D405B; /* Muted dark blue/purple - distant sky/shadows */
+            overflow: hidden;
+            font-family: 'Verdana', 'Geneva', sans-serif;
+            color: #F4F1DE; /* Creamy off-white for text */
+            text-align: center;
+        }
+        #gameTitle {
+            font-size: 2.8em;
+            font-weight: bold;
+            /* Earthy tones for text shadow, inspired by wood/leaves */
+            text-shadow: 3px 3px 0px #582F0E, /* Dark brown */
+                         0 0 18px #E07A5F,  /* Muted terracotta/orange highlight */
+                         0 0 8px #F4F1DE;   /* Creamy highlight */
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+            color: #81B29A; /* Muted seafoam green for title */
+        }
+        #gameCanvas {
+            border: 4px solid #6F4E37; /* Coffee brown border */
+            box-shadow: 0 0 20px rgba(111, 78, 55, 0.5), /* Shadow matching border */
+                        0 0 30px #A3B18A; /* Muted olive green glow */
+            /* Canvas background color is less critical as image will cover it */
+        }
+        #ui-container {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: rgba(74, 78, 105, 0.7); /* Semi-transparent version of body bg */
+            border: 1px solid #8A817C; /* Muted taupe border */
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        }
+        #ui-container p {
+            margin: 6px 0;
+            font-size: 1.05em;
+            text-shadow: 1px 1px 2px #2b2c34; /* Darker shadow for UI text */
+            color: #F2CC8F; /* Muted sandy yellow for UI text */
+        }
+        #message {
+            color: #D4A373 !important; /* Earthy gold for messages */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameTitle">Grace's Treehouse Dream</div>
+    <div>
+        <canvas id="gameCanvas"></canvas>
+        <div id="ui-container">
+            <p id="score">Stars: 0 / 0</p>
+            <p id="message" style="min-height: 22px;"></p>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
