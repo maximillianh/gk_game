@@ -176,6 +176,8 @@ const levels = [
 
 // --- Input Handling ---
 const keys = { left: false, right: false, up: false, down: false };
+
+// Keyboard Listeners
 window.addEventListener('keydown', (e) => {
     if (victoryAchieved) return;
     if (e.key === 'ArrowLeft') keys.left = true;
@@ -197,6 +199,54 @@ window.addEventListener('keyup', (e) => {
     if (e.key === 'ArrowDown') keys.down = false;
     if (e.key === 'ArrowUp' || e.key === ' ') keys.up = false;
 });
+
+// Touch Listeners
+function handleTouchStart(event) {
+    if (victoryAchieved) return;
+    event.preventDefault(); // Prevent default touch actions like scrolling
+
+    const rect = canvas.getBoundingClientRect();
+    const touchX = event.touches[0].clientX - rect.left;
+    const touchY = event.touches[0].clientY - rect.top;
+
+    // Horizontal movement
+    if (touchX < canvas.width / 2) {
+        keys.left = true;
+        keys.right = false;
+    } else {
+        keys.right = true;
+        keys.left = false;
+    }
+
+    // Vertical movement
+    if (touchY < canvas.height / 2) { // Top half for up/jump
+        if (!player.isJumping && player.onGround) {
+            player.velocityY = player.jumpStrength;
+            player.isJumping = true;
+            player.onGround = false;
+            player.jumpHoldFrames = 0;
+            player.ignorePlatformCollisionUntil = 0;
+        }
+        keys.up = true;
+        keys.down = false; 
+    } else { // Bottom half for down
+        keys.down = true;
+        keys.up = false;
+    }
+}
+
+function handleTouchEnd(event) {
+    if (victoryAchieved) return;
+    // When any touch ends, reset all directional keys controlled by touch
+    keys.left = false;
+    keys.right = false;
+    keys.up = false;
+    keys.down = false;
+}
+
+canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+
 
 // --- Drawing Functions ---
 function drawPlayer() {
@@ -357,7 +407,6 @@ function drawExit() {
         ctx.fill();
 
         // Optional: Add some subtle "energy" particles or lines if desired
-        // For example, a few shimmering lines:
         ctx.save();
         ctx.strokeStyle = `hsla(${(dynamicHue + 180) % 360}, 100%, 80%, 0.5 + Math.sin(time * 0.005) * 0.3)`;
         ctx.lineWidth = 1 + Math.sin(time * 0.006) * 0.5;
